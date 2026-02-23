@@ -13,8 +13,8 @@
   "type": "module",
   "scripts": {
     "build": "tsdown",
-    "docs:build": "node dist/cli.mjs build DOCS.md --outDir docs_dist",
-    "docs:dev": "node dist/cli.mjs dev DOCS.md",
+    "docs:build": "bun dist/cli.mjs build DOCS.md --outDir docs_dist",
+    "docs:dev": "bun dist/cli.mjs dev DOCS.md",
     "check": "svelte-check",
     "lint": "oxlint",
     "fmt": "oxfmt",
