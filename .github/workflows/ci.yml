@@ -37,10 +37,8 @@ jobs:
       - name: Build docs
         run: bun run docs:build
       - name: Upload static files as artifact
-        id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs_dist/
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
