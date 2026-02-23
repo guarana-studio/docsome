@@ -4,19 +4,22 @@
   import Sidebar from "$lib/components/sidebar.svelte";
   import TopBar from "$lib/components/top-bar.svelte";
   import CommandMenu from "$lib/components/command-menu.svelte";
+  import Announcement from "$lib/components/announcement.svelte";
+  import Footer from "$lib/components/footer.svelte";
   import { store } from "$lib/store.svelte";
   import { initTheme } from "$lib/theme";
   import { createScrollObserver } from "$lib/scroll-observer";
-  import content from "./test.md?raw";
+  import appContext from "virtual:docsome";
+  import mermaid from "mermaid";
 
-  let title = $derived(store.config?.title);
-
-  await store.init({ content });
+  const { html, config } = appContext;
 
   onMount(() => {
+    mermaid.initialize();
+    store.init();
     initTheme();
     for (const el of document.querySelectorAll("[data-hotkey]")) {
-      install(el);
+      install(el as HTMLElement);
     }
 
     const observer = createScrollObserver({
@@ -32,7 +35,13 @@
 </script>
 
 <svelte:head>
-  <title>{title ?? "Docsome"}</title>
+  <title>{config?.title ?? "Docsome"}</title>
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href={`data:image/svg+xml;base64,${config.logo.src?.light ?? config.logo.src}`}
+    alt={config.logo?.alt}
+  />
 </svelte:head>
 
 <div id="toaster" class="toaster"></div>
@@ -42,11 +51,20 @@
 <div class="min-h-screen flex">
   <Sidebar />
   <div class="flex flex-col flex-1">
+    {#if config?.announcement}
+      <Announcement />
+    {/if}
     <TopBar />
     <main
-      class="prose dark:prose-invert prose-neutral container max-w-240 mx-auto py-12 px-4"
+      class="prose lg:prose-lg dark:prose-invert prose-neutral container max-w-240 mx-auto py-12 px-4"
     >
-      {@html store.html}
+      {@html html}
     </main>
+    {#if config?.footer}
+      <Footer />
+    {/if}
+    <div class="absolute right-2 bottom-2 text-sm text-neutral-500">
+      Built with Docsome
+    </div>
   </div>
 </div>

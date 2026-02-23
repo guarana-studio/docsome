@@ -1,12 +1,20 @@
 <script lang="ts">
+  import { PersistedState } from "runed";
   import { SearchIcon } from "@lucide/svelte";
   import { store } from "$lib/store.svelte";
+  import appContext from "virtual:docsome";
+
   import type { OutlineNode } from "$lib/types";
 
-  console.log(">>>S", store.config);
+  const { outline, config } = appContext;
 
-  const outline = $derived(store.outline?.[0]?.children);
+  const docOutline = outline?.[0]?.children;
+  const title = config?.title;
+  const logo = config?.logo;
+  const sideBar = config?.sideBar;
   const activeSlug = $derived(store.activeSlug);
+
+  const sidebarHidden = new PersistedState("sidebar-hidden", false);
 
   function showCommandMenu() {
     return document.getElementById("commandMenu")?.showModal();
@@ -48,7 +56,7 @@
       <summary
         aria-controls="submenu-{node.slug}"
         class={[
-          "text-neutral-700 dark:text-neutral-400 relative truncate",
+          "text-neutral-700 dark:text-neutral-300 relative truncate",
           isActive &&
             "text-neutral-900! dark:text-neutral-100! bg-sidebar-accent",
         ]}
@@ -68,7 +76,7 @@
     <a
       href="#{node.slug}"
       class={[
-        "text-neutral-700 dark:text-neutral-400 relative block truncate",
+        "text-neutral-700 dark:text-neutral-300 relative block truncate",
         isActive && "text-neutral-900! dark:text-neutral-100!",
       ]}
       aria-current={isActive ? "page" : "false"}
@@ -85,12 +93,29 @@
 <aside class="sidebar" data-side="left">
   <nav aria-label="Sidebar navigation">
     <header>
-      <a href="/" class="btn-ghost justify-start"
-        >{store.config.title ?? "Docsome"}</a
-      >
+      <a href="/" class="btn-ghost px-1 justify-start items-center">
+        {#if typeof config.logo.src === "string"}
+          <img
+            src={`data:image/svg+xml;base64,${logo.src}`}
+            class={["size-6", logo?.invertible && "dark:invert"]}
+            alt={config.logo?.alt}
+          />
+        {:else}
+          <img
+            src={`data:image/svg+xml;base64,${logo.src?.light}`}
+            class="size-6 flex dark:hidden"
+            alt={config.logo?.alt}
+          />
+          <img
+            src={`data:image/svg+xml;base64,${logo.src?.dark}`}
+            class="size-6 hidden dark:flex"
+            alt={config.logo?.alt}
+          />
+        {/if}
+        <span>{title ?? "Docsome"}</span>
+      </a>
       <button
-        type="text"
-        class="input items-center cursor-pointer gap-2"
+        class="btn-outline items-center cursor-pointer gap-2"
         onclick={showCommandMenu}
         data-hotkey="/"
       >
@@ -103,16 +128,33 @@
       <div role="group" aria-labelledby="group-label-content-1">
         <h3 id="group-label-content-1">Documentation</h3>
         <ul>
-          {#each outline as node}
+          {#each docOutline as node}
             <li>
               {@render renderNode(node)}
             </li>
           {/each}
         </ul>
       </div>
+      {#each sideBar?.linkGroups as linkGroup, index}
+        <div role="group" aria-labelledby="group-label-content-{index + 2}">
+          <h3 id="group-label-content-{index + 2}">{linkGroup.label}</h3>
+          <ul>
+            {#each linkGroup.links as link}
+              <li>
+                <a
+                  href={link.href}
+                  class="text-neutral-700 dark:text-neutral-300 relative block truncate"
+                  aria-current="false"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>{link.label}</span>
+                </a>
+              </li>
+            {/each}
+          </ul>
+        </div>
+      {/each}
     </section>
-    <div class="absolute left-2 bottom-2 text-sm text-neutral-500">
-      Built with Docsome
-    </div>
   </nav>
 </aside>

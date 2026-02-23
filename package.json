@@ -1,47 +1,64 @@
 {
   "name": "docsome",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "description": "Zero to docs under 15 seconds.",
+  "license": "Apache-2.0",
+  "author": "Ryuz <ryuzer@proton.me>",
+  "bin": {
+    "docsome": "dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && vite-node src/prerender.ts",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "build": "tsdown",
+    "docs:build": "node dist/cli.mjs build DOCS.md --outDir docs_dist",
+    "docs:dev": "node dist/cli.mjs dev DOCS.md",
+    "check": "svelte-check",
     "lint": "oxlint",
-    "fmt": "oxfmt"
+    "fmt": "oxfmt",
+    "script:schema": "bun scripts/print-schema.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@github/hotkey": "^3.1.1",
     "@lucide/svelte": "^0.574.0",
     "@sindresorhus/slugify": "^3.0.0",
     "dedent": "^1.7.1",
-    "marked": "^17.0.2",
-    "marked-shiki": "^1.2.1",
+    "js-crc": "^0.3.1",
+    "mermaid": "^11.12.3",
     "minisearch": "^7.2.0",
+    "remove-markdown": "^0.6.3",
     "runed": "^0.37.1",
-    "shiki": "^3.22.0",
-    "type-fest": "^5.4.4",
-    "yaml": "^2.8.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@fontsource-variable/geist": "^5.2.8",
     "@fontsource-variable/geist-mono": "^5.2.7",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "@sveltek/markdown": "^0.30.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^24.10.1",
     "basecoat-css": "^0.3.11",
+    "clerc": "^1.3.0-beta.2",
+    "consola": "^3.4.2",
+    "husky": "^9.1.7",
+    "katex": "^0.16.30",
+    "marked": "^17.0.2",
+    "marked-shiki": "^1.2.1",
     "oxfmt": "^0.33.0",
     "oxlint": "^1.48.0",
+    "shiki": "^3.22.0",
     "svelte": "^5.45.2",
     "svelte-check": "^4.3.4",
     "tailwindcss": "^4.1.18",
+    "tsdown": "^0.20.3",
+    "type-fest": "^5.4.4",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
-    "vite-node": "^5.3.0"
+    "vite-plugin-virtual": "^0.5.0",
+    "yaml": "^2.8.2"
   }
 }

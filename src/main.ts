@@ -1,11 +1,14 @@
 import "./app.css";
 import "basecoat-css/all";
+import "katex/dist/katex.min.css";
 import "@fontsource-variable/geist-mono";
 import "@fontsource-variable/geist";
-import { hydrate } from "svelte";
+import { hydrate, mount } from "svelte";
 
 import App from "./app.svelte";
 
-hydrate(App, {
+const fn = import.meta.env.PROD ? hydrate : mount;
+
+fn(App, {
   target: document.getElementById("app")!,
 });
