@@ -64,7 +64,7 @@ marked
   .use(
     markedShiki({
       async highlight(code, lang) {
-        const framemaidUrl = "http://framemaid.guarana.studio";
+        const framemaidUrl = "https://framemaid.guarana.studio";
         if (lang === "mermaid") {
           const mermaidUrl = new URL(framemaidUrl);
           mermaidUrl.searchParams.append("method", "renderMermaid");
