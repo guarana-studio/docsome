@@ -10,12 +10,10 @@
   import { initTheme } from "$lib/theme";
   import { createScrollObserver } from "$lib/scroll-observer";
   import appContext from "virtual:docsome";
-  import mermaid from "mermaid";
 
   const { html, config } = appContext;
 
   onMount(() => {
-    mermaid.initialize();
     store.init();
     initTheme();
     for (const el of document.querySelectorAll("[data-hotkey]")) {

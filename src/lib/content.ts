@@ -1,6 +1,5 @@
 import { slugifyWithCounter } from "@sindresorhus/slugify";
 import dedent from "dedent";
-import katex from "katex";
 import { Marked, type Token } from "marked";
 import markedShiki from "marked-shiki";
 import removeMarkdown from "remove-markdown";
@@ -65,13 +64,18 @@ marked
   .use(
     markedShiki({
       async highlight(code, lang) {
-        if (lang === "mermaid") return `<pre class="mermaid">${code}</pre>`;
+        const framemaidUrl = "http://framemaid.guarana.studio";
+        if (lang === "mermaid") {
+          const mermaidUrl = new URL(framemaidUrl);
+          mermaidUrl.searchParams.append("method", "renderMermaid");
+          mermaidUrl.searchParams.append("params[]", btoa(code));
+          return `<iframe src="${mermaidUrl.toString()}" class="w-full h-[32rem] overflow-hidden">${code}</iframe>`;
+        }
         if (lang === "math") {
-          return katex.renderToString(code, {
-            throwOnError: false,
-            displayMode: true,
-            output: "html",
-          });
+          const katexUrl = new URL(framemaidUrl);
+          katexUrl.searchParams.append("method", "renderKatex");
+          katexUrl.searchParams.append("params[]", btoa(code));
+          return `<iframe src="${katexUrl.toString()}" class="w-full h-[16rem] overflow-hidden">${code}</iframe>`;
         }
         return highlighter.codeToHtml(code, {
           lang,

@@ -1,6 +1,5 @@
 import "./app.css";
 import "basecoat-css/all";
-import "katex/dist/katex.min.css";
 import "@fontsource-variable/geist-mono";
 import "@fontsource-variable/geist";
 import { hydrate, mount } from "svelte";
