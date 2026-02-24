@@ -1,4 +1,4 @@
-import { slugifyWithCounter } from "@sindresorhus/slugify";
+import { slugifyWithCounter, type CountableSlugify } from "@sindresorhus/slugify";
 import dedent from "dedent";
 import { Marked, type Token } from "marked";
 import markedShiki from "marked-shiki";
@@ -17,9 +17,9 @@ const highlighter = await createHighlighter({
 const marked = new Marked();
 
 const renderer = new marked.Renderer();
-const headingSlugify = slugifyWithCounter();
+let headingSlugify: CountableSlugify | undefined;
 renderer.heading = ({ text, depth }) => {
-  const id = headingSlugify(text);
+  const id = headingSlugify?.(text);
   return `<h${depth} id="${id}" class="scroll-mt-20"><a href="#${id}" class="no-underline font-semibold">${text}</a></h${depth}>`;
 };
 renderer.link = ({ href, text }) => {
@@ -214,6 +214,7 @@ function buildParagraphs(tokens: Token[]): Array<Paragraph> {
 }
 
 export async function parseContent(content: string) {
+  headingSlugify = slugifyWithCounter();
   const { config, markdown } = splitFrontmatter(content);
   const html = await marked.parse(markdown);
   const tokens = marked.lexer(markdown);

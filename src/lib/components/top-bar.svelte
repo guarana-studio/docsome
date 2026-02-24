@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PersistedState } from "runed";
     import { MoonIcon, SunIcon, PanelLeftIcon } from "@lucide/svelte";
     import Icon from "./icon.svelte";
     import appContext from "virtual:docsome";
@@ -7,8 +8,10 @@
 
     const topBar = config?.topBar;
 
+    const sidebarHidden = new PersistedState("sidebar-hidden", false);
+
     function toggleSidebar() {
-        return document.dispatchEvent(new CustomEvent("basecoat:sidebar"));
+        document.dispatchEvent(new CustomEvent("basecoat:sidebar"));
     }
 
     function toggleTheme() {
@@ -65,7 +68,7 @@
             data-side="bottom"
             data-align="end"
             onclick={toggleTheme}
-            class="btn-icon-outline size-8"
+            class="btn-icon-outline"
             data-hotkey="m"
         >
             <span class="hidden dark:block"><SunIcon /></span>

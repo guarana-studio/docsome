@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { PersistedState } from "runed";
   import { SearchIcon } from "@lucide/svelte";
   import { store } from "$lib/store.svelte";
@@ -46,6 +47,12 @@
       scrollToSection(slug);
     }
   }
+
+  onMount(() => {
+    document.addEventListener("basecoat:sidebar", () => {
+      sidebarHidden.current = !sidebarHidden.current;
+    });
+  })
 </script>
 
 {#snippet renderNode(node: OutlineNode)}
@@ -90,7 +97,7 @@
   {/if}
 {/snippet}
 
-<aside class="sidebar" data-side="left">
+<aside class="sidebar" data-side="left" data-initial-open={sidebarHidden.current}>
   <nav aria-label="Sidebar navigation">
     <header>
       <a href="/" class="btn-ghost px-1 justify-start items-center">
