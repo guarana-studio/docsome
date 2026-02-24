@@ -54,7 +54,7 @@
     {/if}
     <TopBar />
     <main
-      class="prose lg:prose-lg dark:prose-invert prose-neutral container max-w-240 mx-auto py-12 px-4"
+      class="prose lg:prose-lg dark:prose-invert prose-neutral container max-w-full md:max-w-240 mx-auto py-12 px-4 min-w-0"
     >
       {@html html}
     </main>

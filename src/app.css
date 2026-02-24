@@ -8,7 +8,25 @@
 }
 
 .shiki {
-  @apply py-3 px-4 overflow-x-scroll text-[1rem];
+  @apply py-3 px-4 overflow-x-auto text-[1rem];
+}
+
+.prose .highlighted-code {
+  @apply w-full;
+  container-type: inline-size;
+}
+
+.prose .highlighted-code pre,
+.prose .highlighted-code .shiki {
+  @apply max-w-full overflow-x-auto;
+}
+
+.prose {
+  @apply break-words;
+}
+
+.prose iframe {
+  @apply max-w-full;
 }
 
 html.dark .shiki,

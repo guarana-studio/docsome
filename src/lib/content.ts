@@ -49,7 +49,14 @@ renderer.table = (token) => {
     body += `<tr>\n${rowCells}</tr>\n`;
   }
   if (body) body = `<tbody>${body}</tbody>`;
-  return '<table class="table">\n' + "<thead>\n" + header + "</thead>\n" + body + "</table>\n";
+  return (
+    '<div class="overflow-x-auto"><table class="table">\n' +
+    "<thead>\n" +
+    header +
+    "</thead>\n" +
+    body +
+    "</table></div>\n"
+  );
 };
 renderer.checkbox = ({ checked }) => {
   return "<input " + (checked ? 'checked="" ' : "") + 'disabled="" type="checkbox" class="input"> ';
