@@ -1,29 +1,24 @@
 <script lang="ts">
     import { tick } from "svelte";
     import { SearchIcon, XIcon } from "@lucide/svelte";
-    import { onClickOutside, PressedKeys } from "runed";
+    import { PressedKeys } from "runed";
     import { store } from "$lib/store.svelte";
     import { mark, truncate } from "$lib/attachments";
 
     let dialogContainer = $state<HTMLDialogElement>();
-    const dialogOpened = $derived(dialogContainer?.open ?? false);
     let commandContainer = $state<HTMLDivElement>();
     let inputValue = $state("");
     const keywords = $derived(inputValue.split(" "));
     const miniSearch = $derived(store.miniSearch);
     const searchResults = $derived(miniSearch?.search(inputValue) ?? []);
 
-    function closeCommandMenu() {
+    function closeCommandMenu(event) {
+        if (event.target.id !== "commandMenu") return
         return dialogContainer.close();
     }
-
-    const clickOutsideHandler = onClickOutside(
-        () => commandContainer,
-        () => closeCommandMenu(),
-    );
 </script>
 
-<dialog id="commandMenu" class="dialog p-0" bind:this={dialogContainer}>
+<dialog id="commandMenu" class="dialog p-0" bind:this={dialogContainer} onclick={closeCommandMenu}>
     <div bind:this={commandContainer} class="p-0 gap-0">
         <header>
             <div class="relative">
