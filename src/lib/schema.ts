@@ -21,9 +21,11 @@ export const LinkGroupSchema = z.object({
   links: z.array(LinkSchema).default([]),
 });
 
+export const HeadAttributes = z.record(z.string(), z.union([z.string(), z.boolean()]).optional());
+
 export const HeadItemSchema = z.object({
   tag: z.string(),
-  attrs: z.record(z.string(), z.string().optional()),
+  attrs: HeadAttributes.optional(),
   content: z.string().optional(),
 });
 

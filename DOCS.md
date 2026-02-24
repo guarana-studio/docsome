@@ -1,4 +1,20 @@
 ---
+head:
+  - tag: script
+    content: |
+      window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}} ,has:function(t,r){return"q"===r}}) }();
+      window.op('init', {
+        apiUrl: "https://openpanel-api.guarana.studio",
+        clientId: 'bd155a5d-9af8-4df0-b6a9-0303523816d2',
+        trackScreenViews: true,
+        trackOutgoingLinks: true,
+        trackAttributes: true,
+      });
+  - tag: script
+    attrs:
+      src: https://openpanel.dev/op1.js
+      defer: true
+      async: true
 footer:
   text: Copyright © %YEAR% Docsome
 ---
@@ -11,44 +27,9 @@ If you are a builder and don't want to spend too much time on documentation main
 
 ## Introduction
 
-### Getting Started
-
-#### Prerequisites
-
-- Node.js
-- Terminal
-
-#### Building
-
-Docsome ships with a CLI (command-line interface) that requires only a single Markdown file to start building your documentation:
-
-```sh
-npx docsome build DOCS.md
-```
-
-or use Bun:
-
-```sh
-bunx docsome build DOCS.md
-```
-
-#### Development
-
-For your convenience, the CLI ships with a development server so you don't have to build docs each time you make a change to your Markdown. Run it with:
-
-```sh
-npx docsome dev DOCS.md
-```
-
-or use Bun:
-
-```sh
-bunx docsome dev DOCS.md
-```
+Docsome is a documentation framework that requires you to maintain only a single Markdown file. Everything else is abstracted and handled by the tooling. While this limits your ability to adjust the setup, there is still configuration that allows you to tweak the documentation.
 
 ### Features
-
-Docsome is a documentation framework that requires you to maintain only a single Markdown file. Everything else is abstracted and handled by the tooling. While this limits your ability to adjust the setup, there is still configuration that allows you to tweak the documentation.
 
 #### More abstraction
 
@@ -69,6 +50,54 @@ While many other documentation frameworks require you to deploy docs to a server
 #### AI agent friendly
 
 The documentation site generated for you includes an `/llms.txt` file that helps AI agents find relevant information.
+
+### Getting Started
+
+#### Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- Terminal
+
+#### Building
+
+Docsome ships with a CLI (command-line interface) that requires only a single Markdown file to start building your documentation:
+
+##### Using NPM
+
+```sh
+npx docsome build DOCS.md
+```
+
+##### Using Bun
+
+```sh
+bunx docsome build DOCS.md
+```
+
+#### Development
+
+For your convenience, the CLI ships with a development server so you don't have to build docs each time you make a change to your Markdown. Run it with:
+
+##### Using NPM
+
+```sh
+npx docsome dev DOCS.md
+```
+
+##### Using Bun
+
+```sh
+bunx docsome dev DOCS.md
+```
+
+#### Scripts for JS project
+
+```json
+"scripts": {
+  "docs:build": "npx docsome build DOCS.md --outDir docs_dist",
+  "docs:dev": "npx docsome dev DOCS.md",
+}
+```
 
 ## Writing
 
@@ -217,6 +246,78 @@ announcement:
 
 ### GitHub Pages deployment
 
+#### Using NPM
+
+```yaml
+name: Deploy Docs to GitHub Pages
+on:
+  push:
+    branches: ["main"]
+jobs:
+  docs:
+    name: Publish docs
+    runs-on: ubuntu-latest
+    needs: build_nightly
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci
+      - name: Build docs
+        run: npm run docs:build
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs_dist/
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+```
+
+#### Using Bun
+
+```yaml
+name: Deploy Docs to GitHub Pages
+on:
+  push:
+    branches: ["main"]
+jobs:
+  docs:
+    name: Publish docs
+    runs-on: ubuntu-latest
+    needs: build_nightly
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
+      - name: Build docs
+        run: bun run docs:build
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs_dist/
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+```
+
 ## Resources
 
 ### Roadmap
@@ -226,13 +327,13 @@ announcement:
 - [ ] AI content search
 - [ ] Code highlighting theme settings
 - [ ] Toggle for serif font
-- [ ] Custom scripts and styles in `<head>`
 
 #### Done
 
 - [x] Code highlighting
 - [x] Mermaid integration
 - [x] KaTeX integration
+- [x] Custom scripts and styles in `<head>`
 
 ### Showcase
 

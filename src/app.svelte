@@ -40,6 +40,13 @@
     href={`data:image/svg+xml;base64,${config.logo.src?.light ?? config.logo.src}`}
     alt={config.logo?.alt}
   />
+  {#if config.head}
+    {#each config.head as headItem}
+      <svelte:element this={headItem.tag} {...headItem.attrs}>
+        {headItem?.content}
+      </svelte:element>
+    {/each}
+  {/if}
 </svelte:head>
 
 <div id="toaster" class="toaster"></div>
