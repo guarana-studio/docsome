@@ -4,6 +4,8 @@ interface Section {
   slug: string;
   startY: number;
   endY: number;
+  /** The slug of the nearest h2/h3 parent (for mapping h4/h5/h6 back to sidebar-visible headings) */
+  parentSlug: string;
 }
 
 interface ScrollObserverOptions {
@@ -48,11 +50,20 @@ export function createScrollObserver(options: ScrollObserverOptions) {
     const headings = Array.from(main.querySelectorAll(headingSelector));
     if (headings.length === 0) return [];
 
-    return headings.map((heading, index) => {
+    const mainRect = main.getBoundingClientRect();
+    const mainTop = mainRect.top + window.scrollY;
+    const mainBottom = mainRect.bottom + window.scrollY;
+
+    // Track the nearest h2/h3 parent for h4/h5/h6 headings
+    let lastSidebarVisibleSlug = "";
+
+    const sections: Section[] = headings.map((heading, index) => {
       const nextHeading = headings[index + 1];
+      const headingRect = heading.getBoundingClientRect();
+      const headingTag = heading.tagName.toLowerCase();
 
       // Section starts at the heading's absolute position
-      const startY = heading.getBoundingClientRect().top + window.scrollY;
+      const startY = headingRect.top + window.scrollY;
 
       // Section ends at the next heading's top, or the end of the document
       let endY: number;
@@ -60,23 +71,50 @@ export function createScrollObserver(options: ScrollObserverOptions) {
         endY = nextHeading.getBoundingClientRect().top + window.scrollY;
       } else {
         // Last section goes to the end of main content
-        endY = main.getBoundingClientRect().bottom + window.scrollY;
+        endY = mainBottom;
+      }
+
+      // Update the last sidebar-visible slug if this is h2 or h3
+      if (headingTag === "h2" || headingTag === "h3") {
+        lastSidebarVisibleSlug = heading.id;
       }
 
       return {
         slug: heading.id,
         startY,
         endY,
+        // For h2/h3, parent is itself. For h4/h5/h6, parent is the last h2/h3
+        parentSlug: lastSidebarVisibleSlug || heading.id,
       };
     });
+
+    // Add a virtual section for content before the first heading (if any)
+    if (sections.length > 0 && sections[0].startY > mainTop) {
+      sections.unshift({
+        slug: sections[0].slug,
+        startY: mainTop,
+        endY: sections[0].startY,
+        parentSlug: sections[0].parentSlug,
+      });
+    }
+
+    // Extend the last section to the end of the document (not just main content)
+    // This ensures scrolling past the last paragraph still keeps the last heading active
+    if (sections.length > 0) {
+      const lastSection = sections[sections.length - 1];
+      lastSection.endY = Math.max(document.documentElement.scrollHeight, mainBottom);
+    }
+
+    return sections;
   }
 
   function findActiveSection(): Section | null {
     if (sections.length === 0) return null;
 
     const scrollPos = window.scrollY;
-    // Use a smaller offset (10% from top) to activate sections earlier
-    const viewportTrigger = scrollPos + window.innerHeight * 0.1;
+    // Use a viewport-relative trigger point (20% from top)
+    // This gives a good balance between early activation and stability
+    const viewportTrigger = scrollPos + window.innerHeight * 0.2;
 
     // Find the section that contains the viewport trigger point
     for (const section of sections) {
@@ -85,40 +123,45 @@ export function createScrollObserver(options: ScrollObserverOptions) {
       }
     }
 
-    // Fallback: if we're past the last section, use the last one
-    if (viewportTrigger >= sections[sections.length - 1].startY) {
+    // If we're past all sections, use the last one
+    if (viewportTrigger >= sections[sections.length - 1].endY) {
       return sections[sections.length - 1];
     }
 
-    // Fallback: if we're before the first section, use the first one
+    // If we're before all sections, use the first one
     if (viewportTrigger < sections[0].startY) {
       return sections[0];
     }
 
-    return null;
+    // Should never reach here, but return first section as ultimate fallback
+    return sections[0];
   }
 
   function updateActiveSection() {
     const activeSection = findActiveSection();
     if (!activeSection) return;
 
-    const { slug } = activeSection;
-    store.setActiveSlug(slug);
+    // Use parentSlug for sidebar highlighting (maps h4/h5/h6 to their parent h3)
+    const { slug, parentSlug } = activeSection;
+    store.setActiveSlug(parentSlug);
 
-    // Update URL hash without scrolling
+    // Update URL hash to the actual heading (not parent)
     const hash = `#${slug}`;
     if (location.hash !== hash) {
       history.replaceState(null, "", hash);
     }
 
-    onChange?.(slug);
+    onChange?.(parentSlug);
   }
 
   function onScroll() {
     if (rafId) return;
     rafId = requestAnimationFrame(() => {
-      if (Math.abs(window.scrollY - lastScrollY) > scrollThreshold) {
-        lastScrollY = window.scrollY;
+      const currentScrollY = window.scrollY;
+      // Always update on scroll direction changes or significant movement
+      // This ensures responsiveness while still throttling
+      if (Math.abs(currentScrollY - lastScrollY) > scrollThreshold || sections.length === 0) {
+        lastScrollY = currentScrollY;
         updateActiveSection();
       }
       rafId = 0;
