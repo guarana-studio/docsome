@@ -68,8 +68,5 @@
     {#if config?.footer}
       <Footer />
     {/if}
-    <div class="absolute right-2 bottom-2 text-sm text-neutral-500">
-      Built with Docsome
-    </div>
   </div>
 </div>

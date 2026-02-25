@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { PersistedState } from "runed";
-  import { SearchIcon } from "@lucide/svelte";
+  import { SearchIcon, ChevronsUpDownIcon, ChevronsDownUpIcon } from "@lucide/svelte";
   import { store } from "$lib/store.svelte";
   import appContext from "virtual:docsome";
 
@@ -9,6 +9,7 @@
 
   const { outline, config } = appContext;
 
+  let outlineExpanded = $state(false)
   const docOutline = outline?.[0]?.children;
   const title = config?.title;
   const logo = config?.logo;
@@ -48,6 +49,12 @@
     }
   }
 
+  function toggleOutlineExpanded(event) {
+    outlineExpanded = !outlineExpanded;
+    // HACK: Keep sidebar opened on mobile
+    document.dispatchEvent(new CustomEvent("basecoat:sidebar", { detail: { action: 'open' } }));
+  }
+
   onMount(() => {
     document.addEventListener("basecoat:sidebar", () => {
       sidebarHidden.current = !sidebarHidden.current;
@@ -59,7 +66,7 @@
   {@const isActive = activeSlug === node.slug}
   {@const hasActiveChild = isNodeOrDescendantActive(node)}
   {#if node.children.length > 0}
-    <details open={hasActiveChild}>
+    <details open={outlineExpanded || hasActiveChild}>
       <summary
         aria-controls="submenu-{node.slug}"
         class={[
@@ -133,7 +140,16 @@
     </header>
     <section class="scrollbar">
       <div role="group" aria-labelledby="group-label-content-1">
-        <h3 id="group-label-content-1">Documentation</h3>
+        <div class="flex justify-between items-center">
+          <h3 id="group-label-content-1">Documentation</h3>
+          <button id="toggleOutlineExpanded" class="btn-icon-ghost" onclick={toggleOutlineExpanded}>
+            {#if outlineExpanded}
+              <ChevronsDownUpIcon />
+            {:else}
+              <ChevronsUpDownIcon />
+            {/if}
+          </button>
+        </div>
         <ul>
           {#each docOutline as node}
             <li>

@@ -1,12 +1,29 @@
 <script lang="ts">
     import { PersistedState } from "runed";
-    import { MoonIcon, SunIcon, PanelLeftIcon } from "@lucide/svelte";
+    import { MoonIcon, SunIcon, PanelLeftIcon, LinkIcon } from "@lucide/svelte";
     import Icon from "./icon.svelte";
+    import { store } from "$lib/store.svelte";
     import appContext from "virtual:docsome";
+    import type { OutlineNode } from "$lib/types";
 
-    const { config } = appContext;
+    const { config, outline } = appContext;
 
     const topBar = config?.topBar;
+    const activeSlug = $derived(store.activeSlug);
+
+    function findHeadingTitle(nodes: OutlineNode[], slug: string): string | null {
+        for (const node of nodes) {
+            if (node.slug === slug) return node.title;
+            const found = findHeadingTitle(node.children, slug);
+            if (found) return found;
+        }
+        return null;
+    }
+
+    const currentHeading = $derived(activeSlug
+        ? findHeadingTitle(outline ?? [], activeSlug)
+        : null
+    );
 
     const sidebarHidden = new PersistedState("sidebar-hidden", false);
 
@@ -16,6 +33,18 @@
 
     function toggleTheme() {
         return document.dispatchEvent(new CustomEvent("basecoat:theme"));
+    }
+
+    async function copyLlmsTxtUrl() {
+        await navigator.clipboard.writeText(`${window.location.origin}/llms.txt`);
+        return document.dispatchEvent(new CustomEvent('basecoat:toast', {
+            detail: {
+                config: {
+                category: 'success',
+                title: 'Address copied to clipboard',
+                }
+            }
+        }))
     }
 </script>
 
@@ -35,6 +64,7 @@
         >
             <PanelLeftIcon /></button
         >
+        <div class="font-semibold flex md:hidden">{currentHeading}</div>
     </div>
     <div class="flex items-center gap-2">
         {#each topBar?.links as link}
@@ -51,16 +81,16 @@
             </a>
         {/each}
         {#if topBar?.llms}
-            <a
-                href="/llms.txt"
-                target="_blank"
-                class="btn-outline"
+            <button
+                class="btn-outline hidden md:flex"
                 data-tooltip="Documentation for AI agents"
                 data-side="bottom"
                 data-align="end"
+                onclick={copyLlmsTxtUrl}
             >
-                llms.txt
-            </a>
+                <LinkIcon size={16} />
+                <span>llms.txt</span>
+            </button>
         {/if}
         <button
             aria-label="Toggle dark mode"

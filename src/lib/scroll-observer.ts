@@ -97,7 +97,7 @@ export function createScrollObserver(options: ScrollObserverOptions) {
   function findActiveSection(): Section | null {
     if (sections.length === 0) return null;
 
-    const trigger = window.scrollY + window.innerHeight * 0.2;
+    const trigger = window.scrollY + window.innerHeight * 0.1;
 
     for (const section of sections) {
       if (trigger >= section.startY && trigger < section.endY) {

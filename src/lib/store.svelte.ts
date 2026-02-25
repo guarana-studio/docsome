@@ -1,10 +1,16 @@
 import MiniSearch from "minisearch";
 import appContext from "virtual:docsome";
 
-const { paragraphs } = appContext;
+const { paragraphs, outline } = appContext;
+
+function getFirstHeadingSlug(): string {
+  const mainEl = outline?.[0];
+  const firstNode = outline?.[0]?.children?.[0];
+  return mainEl?.slug ?? firstNode?.slug ?? "";
+}
 
 class Store {
-  activeSlug = $state<string>("");
+  activeSlug = $state<string>(getFirstHeadingSlug());
   miniSearch = $state<MiniSearch>();
 
   init() {
