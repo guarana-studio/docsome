@@ -11,8 +11,6 @@ import virtual, { updateVirtualModule } from "vite-plugin-virtual";
 import packageJson from "../package.json";
 import { parseContent } from "./lib/content";
 
-if (!import.meta.main) throw new Error("This file is intended to be run directly");
-
 async function getAppContext(filePath: string) {
   const content = await readFile(filePath, "utf-8");
   return await parseContent(content);
