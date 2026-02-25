@@ -3,13 +3,28 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import tailwindcss from "@tailwindcss/vite";
 import { Cli } from "clerc";
 import { consola } from "consola";
-import { build, createServer } from "vite";
+import { build, createServer, type UserConfig } from "vite";
 import virtual, { updateVirtualModule } from "vite-plugin-virtual";
 
 import packageJson from "../package.json";
 import { parseContent } from "./lib/content";
+
+const baseViteConfig = {
+  root: import.meta.dirname,
+  plugins: [svelte({ compilerOptions: { experimental: { async: true } } }), tailwindcss()],
+  resolve: {
+    alias: {
+      $lib: path.resolve(import.meta.dirname, "src", "lib"),
+    },
+  },
+  build: {
+    emptyOutDir: true,
+  },
+} satisfies UserConfig;
 
 async function getAppContext(filePath: string) {
   const content = await readFile(filePath, "utf-8");
@@ -26,7 +41,9 @@ async function setupPluginVirtual(filePath: string) {
 async function startServer({ filePath }: { filePath: string }) {
   const pluginVirtual = await setupPluginVirtual(filePath);
   return createServer({
+    ...baseViteConfig,
     plugins: [
+      ...baseViteConfig.plugins,
       {
         name: "parse-content",
         async hotUpdate() {
@@ -89,16 +106,18 @@ Cli()
     parameters: ["<file>"],
   })
   .on("build", async (ctx) => {
-    const outDir = ctx.flags.outDir ?? "dist";
     const cwd = process.cwd();
+    const outDir = path.resolve(cwd, ctx.flags.outDir ?? "dist");
     const filePath = path.resolve(cwd, ctx.parameters.file);
     const content = await readFile(filePath, "utf-8");
     const appContext = await parseContent(content);
     const pluginVirtual = await setupPluginVirtual(filePath);
     await build({
+      ...baseViteConfig,
       base: appContext.config.base,
-      plugins: [pluginVirtual],
+      plugins: [...baseViteConfig.plugins, pluginVirtual],
       build: {
+        ...baseViteConfig.build,
         outDir,
       },
     });

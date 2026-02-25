@@ -3,14 +3,8 @@ import appContext from "virtual:docsome";
 
 const { paragraphs, outline } = appContext;
 
-function getFirstHeadingSlug(): string {
-  const mainEl = outline?.[0];
-  const firstNode = outline?.[0]?.children?.[0];
-  return mainEl?.slug ?? firstNode?.slug ?? "";
-}
-
 class Store {
-  activeSlug = $state<string>(getFirstHeadingSlug());
+  activeSlug = $state<string>(outline?.[0]?.slug ?? "");
   miniSearch = $state<MiniSearch>();
 
   init() {
