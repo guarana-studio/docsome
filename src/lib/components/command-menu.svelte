@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { tick } from "svelte";
     import { SearchIcon, XIcon } from "@lucide/svelte";
-    import { PressedKeys } from "runed";
     import { store } from "$lib/store.svelte";
     import { mark, truncate } from "$lib/attachments";
 
@@ -12,13 +10,14 @@
     const miniSearch = $derived(store.miniSearch);
     const searchResults = $derived(miniSearch?.search(inputValue) ?? []);
 
-    function closeCommandMenu(event) {
-        return dialogContainer.close();
+    function closeCommandMenu() {
+        return dialogContainer?.close();
     }
 
-    function overlayClose(event) {
-        if (event.target.id !== "commandMenu") return
-        return closeCommandMenu(event)
+    function overlayClose(event: Event) {
+        // @ts-expect-error the id is there
+        if (event.target?.id !== "commandMenu") return
+        return closeCommandMenu()
     }
 </script>
 

@@ -1,4 +1,6 @@
 ---
+title: Docsome
+description: Zero to docs under 15 seconds. Maintain a single Markdown file and generate an elegant, fully static documentation site.
 head:
   - tag: script
     content: |
@@ -320,23 +322,15 @@ jobs:
 
 ## Resources
 
-### Roadmap
-
-#### To do
-
-- [ ] AI content search
-- [ ] Code highlighting theme settings
-- [ ] Toggle for serif font
-
-#### Done
-
-- [x] Code highlighting
-- [x] Mermaid integration
-- [x] KaTeX integration
-- [x] Custom scripts and styles in `<head>`
-
 ### Showcase
 
 ### Nightly build
 
-There are experimental builds of Docsome availabe.
+There are [experimental builds of Docsome](https://pkg.pr.new/~/guarana-studio/docsome) availabe.
+
+Use them as:
+
+```sh
+npx https://pkg.pr.new/guarana-studio/docsome@main build DOCS.md
+npx https://pkg.pr.new/guarana-studio/docsome@main dev DOCS.md
+```

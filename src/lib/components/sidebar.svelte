@@ -19,7 +19,8 @@
   const sidebarHidden = new PersistedState("sidebar-hidden", false);
 
   function showCommandMenu() {
-    return document.getElementById("commandMenu")?.showModal();
+    const commandMenu = document.getElementById("commandMenu") as HTMLDialogElement
+    return commandMenu?.showModal();
   }
 
   // Check if a node or any of its descendants is active
@@ -49,7 +50,7 @@
     }
   }
 
-  function toggleOutlineExpanded(event) {
+  function toggleOutlineExpanded() {
     outlineExpanded = !outlineExpanded;
     // HACK: Keep sidebar opened on mobile
     document.dispatchEvent(new CustomEvent("basecoat:sidebar", { detail: { action: 'open' } }));

@@ -5,11 +5,11 @@
         name: "github";
     };
 
-    let { name } = $props();
+    let { name }: Props = $props();
 
     const icons = {
         github: GithubIcon,
-    };
+    } as const;
 
     let Icon = $derived(icons[name]);
 </script>

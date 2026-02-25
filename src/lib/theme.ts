@@ -6,15 +6,15 @@ export function initTheme() {
     }
   } catch {}
 
-  const apply = (dark) => {
+  const apply = (dark: boolean) => {
     document.documentElement.classList.toggle("dark", dark);
     try {
       localStorage.setItem("themeMode", dark ? "dark" : "light");
     } catch {}
   };
 
-  document.addEventListener("basecoat:theme", (event) => {
-    const mode = event.detail?.mode;
+  document.addEventListener("basecoat:theme", (event: Event) => {
+    const mode = (event as Event & { detail: { mode: string } }).detail?.mode;
     apply(
       mode === "dark"
         ? true

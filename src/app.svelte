@@ -13,6 +13,8 @@
 
   const { html, config } = appContext;
 
+  const siteTitle = config?.title ?? "Docsome"
+
   onMount(() => {
     store.init();
     initTheme();
@@ -23,7 +25,6 @@
     const observer = createScrollObserver({
       container: "main",
       headingSelector: "h1, h2, h3, h4, h5, h6",
-      viewportOffset: 0.3,
     });
 
     observer.init();
@@ -33,12 +34,19 @@
 </script>
 
 <svelte:head>
-  <title>{config?.title ?? "Docsome"}</title>
+  <title>{siteTitle}</title>
+  <meta property="og:site_name" content={siteTitle} />
+  <meta property="og:title" content={siteTitle} />
+  <meta name="twitter:title" content={siteTitle} />
+  {#if config?.description}
+    <meta name="description" content={config.description} />
+    <meta property="og:description" content={config.description} />
+    <meta name="twitter:description" content={config.description} />
+  {/if}
   <link
     rel="icon"
     type="image/svg+xml"
     href={`data:image/svg+xml;base64,${config.logo.src?.light ?? config.logo.src}`}
-    alt={config.logo?.alt}
   />
   {#if config?.head}
     {#each config.head as headItem}
