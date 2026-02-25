@@ -8,7 +8,7 @@
 }
 
 .shiki {
-  @apply py-3 px-4 overflow-x-auto text-[1rem];
+  @apply py-3 px-4 overflow-x-auto text-[14px];
 }
 
 .prose .highlighted-code {
@@ -36,4 +36,10 @@ html.dark .shiki span {
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;
   text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+@media (width >= 48rem) {
+  .shiki {
+    @apply text-[16px];
+  }
 }
