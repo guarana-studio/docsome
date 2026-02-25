@@ -13,14 +13,18 @@
     const searchResults = $derived(miniSearch?.search(inputValue) ?? []);
 
     function closeCommandMenu(event) {
-        if (event.target.id !== "commandMenu") return
         return dialogContainer.close();
+    }
+
+    function overlayClose(event) {
+        if (event.target.id !== "commandMenu") return
+        return closeCommandMenu(event)
     }
 </script>
 
-<dialog id="commandMenu" class="dialog p-0" bind:this={dialogContainer} onclick={closeCommandMenu}>
-    <div bind:this={commandContainer} class="p-0 gap-0">
-        <header>
+<dialog id="commandMenu" class="dialog p-0" bind:this={dialogContainer} onclick={overlayClose}>
+    <div bind:this={commandContainer} class="p-0 gap-0 overflow-y-scroll flex flex-col">
+        <header class="sticky inset-x-0 top-0 z-10 bg-background">
             <div class="relative">
                 <SearchIcon
                     size={20}
@@ -35,9 +39,17 @@
                     class="input pl-8 py-6"
                     bind:value={inputValue}
                 />
+                <button
+                    type="button"
+                    aria-label="Close dialog"
+                    onclick={closeCommandMenu}
+                    class="absolute right-4 top-1/2 -translate-y-1/2"
+                >
+                    <XIcon size={20} />
+                </button>
             </div>
         </header>
-        <section class="flex flex-col">
+        <section class="flex flex-col max-w-full flex-1 m-0 p-0">
             {#each searchResults as result}
                 <a
                     href={`/#${result.id}`}
@@ -60,12 +72,5 @@
                 </a>
             {/each}
         </section>
-        <button
-            type="button"
-            aria-label="Close dialog"
-            onclick={closeCommandMenu}
-        >
-            <XIcon />
-        </button>
     </div>
 </dialog>

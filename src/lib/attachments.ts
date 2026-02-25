@@ -153,10 +153,6 @@ export function truncate(keywords: string[], wordPadding = 3): Attachment {
     const beforeWords = words.slice(startWordIndex, matchWordIndex);
     const afterWords = words.slice(matchWordIndex + 1, endWordIndex + 1);
 
-    // Reconstruct the text with ellipsis and highlighted keyword
-    const prefix = startWordIndex > 0 ? "..." : "";
-    const suffix = endWordIndex < words.length - 1 ? "..." : "";
-
     // Create the new HTML content
     const escapedKeywords = keywords.map(escapeRegex);
     const highlightPattern = new RegExp(`(${escapedKeywords.join("|")})`, "gi");
@@ -170,11 +166,9 @@ export function truncate(keywords: string[], wordPadding = 3): Attachment {
     const afterText = highlightText(afterWords.join(" "));
 
     const parts: string[] = [];
-    if (prefix) parts.push(prefix);
     if (beforeText) parts.push(beforeText);
     parts.push(highlightedKeyword);
     if (afterText) parts.push(afterText);
-    if (suffix) parts.push(suffix);
 
     element.innerHTML = parts.join(" ");
 
