@@ -57,7 +57,7 @@ bunx docsome dev DOCS.md
 - [ ] Toggle for serif font
 - [ ] Twoslash integration
 - [ ] OG Image generation
-- [ ] Define variables in the front matter
+- [ ] Define global variables in the frontmatter
 
 ### Done
 

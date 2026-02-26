@@ -42,7 +42,7 @@ function wrapHighlighted({ raw, highlighted }: { raw: string; highlighted: strin
     <figure class="highlighted-code relative shadow-sm rounded overflow-hidden group my-4 not-prose">
       <textarea class="sr-only js-raw" aria-hidden="true" tabindex="-1">${raw}</textarea>
       <button
-        class="absolute btn-icon-outline top-2 right-2 opacity-0 group-hover:opacity-100"
+        class="absolute btn-sm-icon-outline top-2 right-2 opacity-100 md:opacity-0 group-hover:opacity-100"
         type="button"
         onclick="
           const raw = this.closest('figure')?.querySelector('.js-raw')?.value ?? '';
