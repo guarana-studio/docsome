@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "$lib/*": ["src/lib/*"]
-    }
+    },
+    "target": "es2018"
   },
   "include": ["src"]
 }

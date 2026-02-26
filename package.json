@@ -2,8 +2,13 @@
   "name": "docsome",
   "version": "0.0.1",
   "description": "Zero to docs under 15 seconds.",
+  "homepage": "https://docsome.guarana.studio",
   "license": "Apache-2.0",
   "author": "Ryuz <ryuzer@proton.me>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guarana-studio/docsome.git"
+  },
   "bin": {
     "docsome": "dist/cli.mjs"
   },
@@ -26,6 +31,9 @@
     "@fontsource-variable/geist-mono": "^5.2.7",
     "@github/hotkey": "^3.1.1",
     "@lucide/svelte": "^0.574.0",
+    "@mdit/plugin-container": "^0.23.0",
+    "@mdit/plugin-footnote": "^0.23.0",
+    "@mdit/plugin-tasklist": "^0.23.0",
     "@sindresorhus/slugify": "^3.0.0",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/typography": "^0.5.19",
@@ -33,9 +41,9 @@
     "basecoat-css": "^0.3.11",
     "dedent": "^1.7.1",
     "js-crc": "^0.3.1",
-    "marked": "^17.0.2",
-    "marked-shiki": "^1.2.1",
+    "markdown-it": "^14.1.1",
     "minisearch": "^7.2.0",
+    "nanoid": "^5.1.6",
     "remove-markdown": "^0.6.3",
     "runed": "^0.37.1",
     "shiki": "^3.22.0",

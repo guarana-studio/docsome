@@ -23,7 +23,13 @@ footer:
 
 # Docsome
 
-> Zero to docs under 15 seconds.
+> Zero to docs under 15 seconds.[^*]
+
+[^*]: Due to RAM shortage it may get longer.
+
+:::alert warning
+Docsome is currently in early alpha.
+:::
 
 If you are a builder and don't want to spend too much time on documentation maintenance, you are in the right place. All you have to do is create one good [Markdown](https://commonmark.org/help/) file and run Docsome to transform it into attractive documentation.
 
@@ -64,33 +70,49 @@ The documentation site generated for you includes an `/llms.txt` file that helps
 
 Docsome ships with a CLI (command-line interface) that requires only a single Markdown file to start building your documentation:
 
-##### Using NPM
+````tabs
+
+== NPM
 
 ```sh
 npx docsome build DOCS.md
 ```
 
-##### Using Bun
+==
+
+== Bun
 
 ```sh
 bunx docsome build DOCS.md
 ```
 
+==
+
+````
+
 #### Development
 
 For your convenience, the CLI ships with a development server so you don't have to build docs each time you make a change to your Markdown. Run it with:
 
-##### Using NPM
+````tabs
+
+== NPM
 
 ```sh
 npx docsome dev DOCS.md
 ```
 
-##### Using Bun
+==
+
+== Bun
 
 ```sh
 bunx docsome dev DOCS.md
 ```
+
+==
+
+````
 
 #### Scripts for JS project
 
@@ -107,7 +129,17 @@ bunx docsome dev DOCS.md
 
 #### Tables
 
-##### Code
+````tabs
+
+== Result
+
+| foo | bar |
+| --- | --- |
+| baz | bim |
+
+==
+
+== Code
 
 ```md
 | foo | bar |
@@ -115,27 +147,61 @@ bunx docsome dev DOCS.md
 | baz | bim |
 ```
 
-##### Result
+==
 
-| foo | bar |
-| --- | --- |
-| baz | bim |
+````
 
 #### Task list items
 
-##### Code
+````tabs
+
+== Result
+
+- [x] Fix the kitchen sink
+- [ ] Deploy to production
+
+==
+
+== Code
 
 ```md
 - [x] Fix the kitchen sink
 - [ ] Deploy to production
 ```
 
-##### Result
+==
 
-- [x] Fix the kitchen sink
-- [ ] Deploy to production
+````
+
+#### Alerts
+
+````tabs
+
+== Result
+
+:::alert info
+This is an additional information.
+:::
+
+==
+
+== Code
+
+```md
+:::alert info
+This is an additional information.
+:::
+```
+
+==
+
+````
 
 ### Mermaid
+
+`````tabs
+
+== Result
 
 ```mermaid
 graph LR
@@ -144,11 +210,72 @@ graph LR
     B-->D
 ```
 
+==
+
+== Code
+
+````md
+```mermaid
+graph LR
+    A --- B
+    B-->C
+    B-->D
+```
+````
+
+==
+
+`````
+
 ### Math
+
+`````tabs
+
+== Result
 
 ```math
 E = mc^2
 ```
+
+==
+
+== Code
+
+````md
+```math
+E = mc^2
+```
+````
+
+==
+
+`````
+
+### HTML & CSS
+
+Docsome ships with [Basecoat](https://basecoatui.com/). That means you can use all of the components from the UI kit.
+
+````tabs
+
+== Result
+
+<button class="btn-outline" data-tooltip="Tooltip text" data-side="bottom" data-align="center">
+  Hover me
+</button>
+
+==
+
+== Code
+
+```html
+<button class="btn-outline" data-tooltip="Tooltip text" data-side="bottom" data-align="center">
+  Hover me
+</button>
+```
+
+==
+
+````
 
 ## Configuration
 
@@ -165,7 +292,9 @@ base: /docs/ # Base URL of the site
 
 #### Logo
 
-##### Automatic adjustement to color mode
+````tabs
+
+== Automatic inversion
 
 ```yaml
 logo:
@@ -174,7 +303,9 @@ logo:
   alt: My site's logo # Alt text for the logo
 ```
 
-##### Custom logo for both color modes
+==
+
+== Separate mode logo
 
 ```yaml
 logo:
@@ -182,6 +313,10 @@ logo:
     light: BASE64_OF_SVG_FILE # Base 64 encoded light logo SVG file
     dark: BASE64_OF_SVG_FILE # Base 64 encoded dark logo SVG file
 ```
+
+==
+
+````
 
 #### Head
 
@@ -248,7 +383,9 @@ announcement:
 
 ### GitHub Pages deployment
 
-#### Using NPM
+````tabs
+
+== NPM
 
 ```yaml
 name: Deploy Docs to GitHub Pages
@@ -285,7 +422,9 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-#### Using Bun
+==
+
+== Bun
 
 ```yaml
 name: Deploy Docs to GitHub Pages
@@ -320,9 +459,11 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-## Resources
+==
 
-### Showcase
+````
+
+## Resources
 
 ### Nightly build
 

@@ -1,6 +1,6 @@
 # Docsome
 
-[![pkg.pr.new](/badge/guarana-studio/docsome)](/~/guarana-studio/docsome)
+[![pkg.pr.new](https://pkg.pr.new/badge/guarana-studio/docsome)](https://pkg.pr.new/~/guarana-studio/docsome)
 
 > Zero to docs under 15 seconds.
 
@@ -57,6 +57,7 @@ bunx docsome dev DOCS.md
 - [ ] Toggle for serif font
 - [ ] Twoslash integration
 - [ ] OG Image generation
+- [ ] Define variables in the front matter
 
 ### Done
 
