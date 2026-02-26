@@ -1,6 +1,6 @@
 <script lang="ts">
     import { PersistedState } from "runed";
-    import { MoonIcon, SunIcon, PanelLeftIcon, LinkIcon } from "@lucide/svelte";
+    import { PanelLeftIcon, LinkIcon } from "@lucide/svelte";
     import Icon from "./icon.svelte";
     import { store } from "$lib/store.svelte";
     import appContext from "virtual:docsome";
@@ -29,10 +29,6 @@
 
     function toggleSidebar() {
         document.dispatchEvent(new CustomEvent("basecoat:sidebar"));
-    }
-
-    function toggleTheme() {
-        return document.dispatchEvent(new CustomEvent("basecoat:theme"));
     }
 
     async function copyLlmsTxtUrl() {
@@ -92,17 +88,5 @@
                 <span>llms.txt</span>
             </button>
         {/if}
-        <button
-            aria-label="Toggle dark mode"
-            data-tooltip="Toggle dark mode [m]"
-            data-side="bottom"
-            data-align="end"
-            onclick={toggleTheme}
-            class="btn-icon-outline"
-            data-hotkey="m"
-        >
-            <span class="hidden dark:block"><SunIcon /></span>
-            <span class="block dark:hidden"><MoonIcon /></span>
-        </button>
     </div>
 </header>

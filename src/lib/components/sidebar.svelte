@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { PersistedState } from "runed";
-  import { SearchIcon, ChevronsUpDownIcon, ChevronsDownUpIcon } from "@lucide/svelte";
+  import { SearchIcon, ChevronsUpDownIcon, ChevronsDownUpIcon, SunIcon, MoonIcon } from "@lucide/svelte";
   import { store } from "$lib/store.svelte";
   import appContext from "virtual:docsome";
 
@@ -56,6 +56,10 @@
     document.dispatchEvent(new CustomEvent("basecoat:sidebar", { detail: { action: 'open' } }));
   }
 
+  function toggleTheme() {
+    return document.dispatchEvent(new CustomEvent("basecoat:theme"));
+  }
+
   onMount(() => {
     document.addEventListener("basecoat:sidebar", () => {
       sidebarHidden.current = !sidebarHidden.current;
@@ -108,27 +112,41 @@
 <aside class="sidebar" data-side="left" data-initial-open={sidebarHidden.current}>
   <nav aria-label="Sidebar navigation">
     <header>
-      <a href="/" class="btn-ghost px-1 justify-start items-center">
-        {#if typeof config.logo.src === "string"}
-          <img
-            src={`data:image/svg+xml;base64,${logo.src}`}
-            class={["size-6", logo?.invertible && "dark:invert"]}
-            alt={config.logo?.alt}
-          />
-        {:else}
-          <img
-            src={`data:image/svg+xml;base64,${logo.src?.light}`}
-            class="size-6 flex dark:hidden"
-            alt={config.logo?.alt}
-          />
-          <img
-            src={`data:image/svg+xml;base64,${logo.src?.dark}`}
-            class="size-6 hidden dark:flex"
-            alt={config.logo?.alt}
-          />
-        {/if}
-        <span>{title ?? "Docsome"}</span>
-      </a>
+      <div class="flex justify-between items-center">
+        <a href="/" class="btn-ghost px-1 justify-start items-center">
+          {#if typeof config.logo.src === "string"}
+            <img
+              src={`data:image/svg+xml;base64,${logo.src}`}
+              class={["size-6", logo?.invertible && "dark:invert"]}
+              alt={config.logo?.alt}
+            />
+          {:else}
+            <img
+              src={`data:image/svg+xml;base64,${logo.src?.light}`}
+              class="size-6 flex dark:hidden"
+              alt={config.logo?.alt}
+            />
+            <img
+              src={`data:image/svg+xml;base64,${logo.src?.dark}`}
+              class="size-6 hidden dark:flex"
+              alt={config.logo?.alt}
+            />
+          {/if}
+          <span>{title ?? "Docsome"}</span>
+        </a>
+        <button
+            aria-label="Toggle dark mode"
+            data-tooltip="Toggle dark mode [m]"
+            data-side="bottom"
+            data-align="end"
+            onclick={toggleTheme}
+            class="btn-icon-outline"
+            data-hotkey="m"
+        >
+            <span class="hidden dark:block"><SunIcon /></span>
+            <span class="block dark:hidden"><MoonIcon /></span>
+        </button>
+      </div>
       <button
         class="btn-outline items-center cursor-pointer gap-2"
         onclick={showCommandMenu}
