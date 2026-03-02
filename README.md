@@ -58,6 +58,7 @@ bunx docsome dev DOCS.md
 - [ ] Twoslash integration
 - [ ] OG Image generation
 - [ ] Define global variables in the frontmatter
+- [ ] Define a standard for i18n
 
 ### Done
 

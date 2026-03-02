@@ -3,20 +3,10 @@ title: Docsome
 description: Zero to docs under 15 seconds. Maintain a single Markdown file and generate an elegant, fully static documentation site.
 head:
   - tag: script
-    content: |
-      window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}} ,has:function(t,r){return"q"===r}}) }();
-      window.op('init', {
-        apiUrl: "https://openpanel-api.guarana.studio",
-        clientId: 'bd155a5d-9af8-4df0-b6a9-0303523816d2',
-        trackScreenViews: true,
-        trackOutgoingLinks: true,
-        trackAttributes: true,
-      });
-  - tag: script
     attrs:
-      src: https://openpanel.dev/op1.js
+      src: https://umami.guarana.studio/script.js
       defer: true
-      async: true
+      data-website-id: 0c523065-599e-4ac3-9e9e-3d553e6a51c5
 topBar:
   links:
     - icon: github
