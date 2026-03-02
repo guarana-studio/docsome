@@ -1,5 +1,6 @@
 import { container, type MarkdownItContainerOptions } from "@mdit/plugin-container";
 import { footnote } from "@mdit/plugin-footnote";
+import { snippet, type MarkdownItSnippetOptions } from "@mdit/plugin-snippet";
 import { tasklist } from "@mdit/plugin-tasklist";
 import { slugifyWithCounter, type CountableSlugify } from "@sindresorhus/slugify";
 import dedent from "dedent";
@@ -152,6 +153,9 @@ const mdIt = MarkdownIt({
       `;
     },
   } satisfies MarkdownItContainerOptions)
+  .use(snippet, {
+    currentPath: (env) => env.filePath,
+  } satisfies MarkdownItSnippetOptions)
   .use((md: MarkdownIt) => {
     const fallbackRenderer: RenderRule = (tokens, idx, options, _env, self) => {
       return self.renderToken(tokens, idx, options);

@@ -11,6 +11,7 @@
         "@lucide/svelte": "^0.574.0",
         "@mdit/plugin-container": "^0.23.0",
         "@mdit/plugin-footnote": "^0.23.0",
+        "@mdit/plugin-snippet": "^0.23.1",
         "@mdit/plugin-tasklist": "^0.23.0",
         "@sindresorhus/slugify": "^3.0.0",
         "@sveltejs/vite-plugin-svelte": "^6.2.1",
@@ -154,9 +155,13 @@
 
     "@lucide/svelte": ["@lucide/svelte@0.574.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-tFkSfaKi22uDBkw72xV40oGkSXSQhURTSYn4VK3sNaPzb4dPOYw3znciVCP0VIh5BpgZXfOXRpSp3Dk8eG9EFg=="],
 
+    "@mdit/helper": ["@mdit/helper@0.23.1", "", { "dependencies": { "@types/markdown-it": "^14.1.2" }, "peerDependencies": { "markdown-it": "^14.1.0" }, "optionalPeers": ["markdown-it"] }, "sha512-ifWDG3VbUAx1ia7eBWEHm5vpv5QFUPY3kFLPPZzYBr15A7/d5w7D+8ZBg8xxqkvyC73Ys+zF14EQCq7eQAXYxg=="],
+
     "@mdit/plugin-container": ["@mdit/plugin-container@0.23.0", "", { "dependencies": { "@types/markdown-it": "^14.1.2" }, "peerDependencies": { "markdown-it": "^14.1.0" }, "optionalPeers": ["markdown-it"] }, "sha512-ufaQDtApytcUoR1MtkbMjZZe4AlqvvbzivDDUC9552SubFhPVTpKHHn09dPEl+OBvtMPfSOXcKGssQX8xVZaNA=="],
 
     "@mdit/plugin-footnote": ["@mdit/plugin-footnote@0.23.0", "", { "dependencies": { "@types/markdown-it": "^14.1.2" }, "peerDependencies": { "markdown-it": "^14.1.0" } }, "sha512-nrUYk5dphfCTvgLNzov2MbW5X2ZC3BR35xYX2KtFw6kCvouDru/FUfJDiKYr6h7a63VQbDrJsJq7sY/ZHRYbNw=="],
+
+    "@mdit/plugin-snippet": ["@mdit/plugin-snippet@0.23.1", "", { "dependencies": { "@mdit/helper": "0.23.1", "@types/markdown-it": "^14.1.2", "upath": "^2.0.1" }, "peerDependencies": { "markdown-it": "^14.1.0" }, "optionalPeers": ["markdown-it"] }, "sha512-42WJ4q4uyMMIzblyYBvVQxNt6mtmpoCMweKyWtuhplTj6QnKjBbo4Iz94VC1sIDCMvFcs/dIiA5ZftZSaYr3AQ=="],
 
     "@mdit/plugin-tasklist": ["@mdit/plugin-tasklist@0.23.0", "", { "dependencies": { "@types/markdown-it": "^14.1.2" }, "peerDependencies": { "markdown-it": "^14.1.0" }, "optionalPeers": ["markdown-it"] }, "sha512-i4UHa8aQakHq3I7xS9EzYyL4LF4+/hnyZxMV4mJa8xdw9sJzmt/JVkLUESoaXdOELTzJz6Q4OtgYikrkJ9+eIQ=="],
 
@@ -665,6 +670,8 @@
     "unist-util-visit-parents": ["unist-util-visit-parents@6.0.2", "", { "dependencies": { "@types/unist": "^3.0.0", "unist-util-is": "^6.0.0" } }, "sha512-goh1s1TBrqSqukSc8wrjwWhL0hiJxgA8m4kFxGlQ+8FYQ3C/m11FcTs4YYem7V664AhHVvgoQLk890Ssdsr2IQ=="],
 
     "unrun": ["unrun@0.2.27", "", { "dependencies": { "rolldown": "1.0.0-rc.3" }, "peerDependencies": { "synckit": "^0.11.11" }, "optionalPeers": ["synckit"], "bin": { "unrun": "dist/cli.mjs" } }, "sha512-Mmur1UJpIbfxasLOhPRvox/QS4xBiDii71hMP7smfRthGcwFL2OAmYRgduLANOAU4LUkvVamuP+02U+c90jlrw=="],
+
+    "upath": ["upath@2.0.1", "", {}, "sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w=="],
 
     "util-deprecate": ["util-deprecate@1.0.2", "", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
 
