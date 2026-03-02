@@ -381,11 +381,13 @@ function buildParagraphs(tokens: Token[]): Array<Paragraph> {
   return sections;
 }
 
-export function parseContent(content: string) {
+export function parseContent({ content, sourcePath }: { content: string; sourcePath: string }) {
   headingSlugify = slugifyWithCounter();
   const { config, markdown } = splitFrontmatter(content);
-  const html = mdIt.render(markdown);
-  const tokens = mdIt.parse(markdown, {});
+  const html = mdIt.render(markdown, {
+    filePath: sourcePath,
+  });
+  const tokens = mdIt.parse(markdown, { filePath: sourcePath });
   const outline = buildOutline(tokens);
   const paragraphs = buildParagraphs(tokens);
   return {

@@ -46,7 +46,7 @@ const baseViteConfig = {
 
 async function getAppContext(filePath: string) {
   const content = await fetchContent(filePath);
-  return parseContent(content);
+  return parseContent({ content, sourcePath: filePath });
 }
 
 async function setupPluginVirtual(filePath: string) {
@@ -146,7 +146,7 @@ Cli()
       ? ctx.parameters.file
       : path.resolve(cwd, ctx.parameters.file);
     const content = await fetchContent(filePath);
-    const appContext = parseContent(content);
+    const appContext = parseContent({ content, sourcePath: filePath });
     const pluginVirtual = await setupPluginVirtual(filePath);
     await build({
       ...baseViteConfig,
