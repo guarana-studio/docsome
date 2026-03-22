@@ -27,26 +27,6 @@ footer:
 Docsome is currently in early alpha.
 :::
 
-```
-┌──────────────────────────────────────────┐
-│  poseui — typed HTML builder             │
-│  html`` templates · presets · .handler() │
-└───────────────────┬──────────────────────┘
-                    │ renders HTML strings
-        ┌───────────┴───────────┐
-        │                       │
-┌───────▼──────┐    ┌───────────▼──────────┐
-│ @poseui/on   │    │ @poseui/store        │
-│ DOM events   │    │ reactive state       │
-└───────┬──────┘    └───────────┬──────────┘
-        │                       │
-┌───────▼──────────────────────▼──────────┐
-│ @poseui/form                            │
-│ schema-validated forms                  │
-└─────────────────────────────────────────┘
-@poseui/match — used internally by poseui's .when() and standalone
-```
-
 If you ship things fast and want your documentation to keep up, you are in the right place. Write one [Markdown](https://commonmark.org/help/) file, run Docsome, and get a polished documentation site — no boilerplate, no configuration rabbit holes.
 
 ## Introduction
