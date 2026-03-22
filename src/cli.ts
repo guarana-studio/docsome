@@ -47,7 +47,7 @@ const baseViteConfig = {
   },
 } satisfies UserConfig;
 
-function createDocsomePlugin(filePath: string): Plugin {
+function createDocsomePlugin(filePath: string, isDev = false): Plugin {
   let appContext = parseContent({ content: "", sourcePath: filePath });
 
   return {
@@ -57,6 +57,11 @@ function createDocsomePlugin(filePath: string): Plugin {
       appContext = parseContent({ content, sourcePath: filePath });
     },
     configureServer(server) {
+      // Only set up watcher in dev mode
+      if (!isDev) {
+        return;
+      }
+
       const watcher = chokidar.watch(filePath, {
         persistent: true,
         ignoreInitial: true,
@@ -92,8 +97,16 @@ function createDocsomePlugin(filePath: string): Plugin {
   };
 }
 
-async function startServer({ filePath, publicDir }: { filePath: string; publicDir?: string }) {
-  const docsomePlugin = createDocsomePlugin(filePath);
+async function startServer({
+  filePath,
+  publicDir,
+  isDev = false,
+}: {
+  filePath: string;
+  publicDir?: string;
+  isDev?: boolean;
+}) {
+  const docsomePlugin = createDocsomePlugin(filePath, isDev);
   const fileDir = path.dirname(filePath);
   const server = await createServer({
     ...baseViteConfig,
@@ -134,7 +147,7 @@ async function prerender({
 }
 
 async function runDevServer({ filePath, publicDir }: { filePath: string; publicDir?: string }) {
-  const server = await startServer({ filePath, publicDir });
+  const server = await startServer({ filePath, publicDir, isDev: true });
   await server.listen();
 
   server.printUrls();
