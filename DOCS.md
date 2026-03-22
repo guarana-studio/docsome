@@ -11,8 +11,6 @@ topBar:
   links:
     - icon: github
       href: https://github.com/guarana-studio/docsome
-sideBar:
-  extended: true
 footer:
   text: Copyright © %YEAR% Docsome
 ---
