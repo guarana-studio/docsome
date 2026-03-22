@@ -120,7 +120,7 @@ async function startServer({
     server: {
       ...baseViteConfig.server,
       fs: {
-        allow: [fileDir],
+        allow: [fileDir, process.cwd()],
       },
     },
     plugins: [...baseViteConfig.plugins, docsomePlugin],
