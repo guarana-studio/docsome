@@ -9,11 +9,12 @@
 
   const { outline, config } = appContext;
 
-  let outlineExpanded = $state(false)
   const docOutline = outline?.[0]?.children;
   const title = config?.title;
   const logo = config?.logo;
   const sideBar = config?.sideBar;
+  const isExtended = sideBar?.extended ?? false;
+  let outlineExpanded = $state(isExtended);
   const activeSlug = $derived(store.activeSlug);
 
   const sidebarHidden = new PersistedState("sidebar-hidden", false);
@@ -51,6 +52,7 @@
   }
 
   function toggleOutlineExpanded() {
+    if (isExtended) return;
     outlineExpanded = !outlineExpanded;
     // HACK: Keep sidebar opened on mobile
     document.dispatchEvent(new CustomEvent("basecoat:sidebar", { detail: { action: 'open' } }));
@@ -161,13 +163,15 @@
       <div role="group" aria-labelledby="group-label-content-1">
         <div class="flex justify-between items-center">
           <h3 id="group-label-content-1">Documentation</h3>
-          <button id="toggleOutlineExpanded" class="btn-icon-ghost" onclick={toggleOutlineExpanded}>
-            {#if outlineExpanded}
-              <ChevronsDownUpIcon />
-            {:else}
-              <ChevronsUpDownIcon />
-            {/if}
-          </button>
+          {#if !isExtended}
+            <button id="toggleOutlineExpanded" class="btn-icon-ghost" onclick={toggleOutlineExpanded}>
+              {#if outlineExpanded}
+                <ChevronsDownUpIcon />
+              {:else}
+                <ChevronsUpDownIcon />
+              {/if}
+            </button>
+          {/if}
         </div>
         <ul>
           {#each docOutline as node}

@@ -56,6 +56,7 @@ export const ConfigSchema = z.object({
   sideBar: z
     .object({
       linkGroups: z.array(LinkGroupSchema).default([]),
+      extended: z.coerce.boolean().default(false),
     })
     .optional(),
   announcement: z

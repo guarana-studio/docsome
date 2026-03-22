@@ -5,10 +5,10 @@ import path from "node:path";
 
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
+import chokidar from "chokidar";
 import { Cli } from "clerc";
 import { consola } from "consola";
-import { build, createServer, type UserConfig } from "vite";
-import virtual, { updateVirtualModule } from "vite-plugin-virtual";
+import { build, createServer, type UserConfig, type Plugin } from "vite";
 import { z } from "zod";
 
 import packageJson from "../package.json";
@@ -42,37 +42,71 @@ const baseViteConfig = {
   build: {
     emptyOutDir: true,
   },
+  server: {
+    host: true,
+  },
 } satisfies UserConfig;
 
-async function getAppContext(filePath: string) {
-  const content = await fetchContent(filePath);
-  return parseContent({ content, sourcePath: filePath });
-}
+function createDocsomePlugin(filePath: string): Plugin {
+  let appContext = parseContent({ content: "", sourcePath: filePath });
 
-async function setupPluginVirtual(filePath: string) {
-  const appContext = await getAppContext(filePath);
-  return virtual({
-    "virtual:docsome": appContext,
-  });
+  return {
+    name: "docsome-virtual",
+    async buildStart() {
+      const content = await fetchContent(filePath);
+      appContext = parseContent({ content, sourcePath: filePath });
+    },
+    configureServer(server) {
+      const watcher = chokidar.watch(filePath, {
+        persistent: true,
+        ignoreInitial: true,
+        usePolling: true,
+        interval: 100,
+      });
+
+      watcher.on("change", async () => {
+        const content = await fetchContent(filePath);
+        appContext = parseContent({ content, sourcePath: filePath });
+        const moduleNode = server.moduleGraph.getModuleById("virtual:docsome");
+        if (moduleNode) {
+          server.moduleGraph.invalidateModule(moduleNode);
+        }
+        server.ws.send({ type: "full-reload" });
+      });
+
+      // Clean up watcher when server closes
+      server.httpServer?.on("close", () => {
+        watcher.close();
+      });
+    },
+    resolveId(id) {
+      if (id === "virtual:docsome") {
+        return id;
+      }
+    },
+    load(id) {
+      if (id === "virtual:docsome") {
+        return `export default ${JSON.stringify(appContext)};`;
+      }
+    },
+  };
 }
 
 async function startServer({ filePath, publicDir }: { filePath: string; publicDir?: string }) {
-  const pluginVirtual = await setupPluginVirtual(filePath);
-  return createServer({
+  const docsomePlugin = createDocsomePlugin(filePath);
+  const fileDir = path.dirname(filePath);
+  const server = await createServer({
     ...baseViteConfig,
     publicDir,
-    plugins: [
-      ...baseViteConfig.plugins,
-      {
-        name: "parse-content",
-        async hotUpdate() {
-          const appContext = await getAppContext(filePath);
-          return updateVirtualModule(pluginVirtual, "virtual:docsome", appContext);
-        },
+    server: {
+      ...baseViteConfig.server,
+      fs: {
+        allow: [fileDir],
       },
-      pluginVirtual,
-    ],
+    },
+    plugins: [...baseViteConfig.plugins, docsomePlugin],
   });
+  return server;
 }
 
 async function prerender({
@@ -147,12 +181,12 @@ Cli()
       : path.resolve(cwd, ctx.parameters.file);
     const content = await fetchContent(filePath);
     const appContext = parseContent({ content, sourcePath: filePath });
-    const pluginVirtual = await setupPluginVirtual(filePath);
+    const docsomePlugin = createDocsomePlugin(filePath);
     await build({
       ...baseViteConfig,
       base: appContext.config.base,
       publicDir,
-      plugins: [...baseViteConfig.plugins, pluginVirtual],
+      plugins: [...baseViteConfig.plugins, docsomePlugin],
       build: {
         ...baseViteConfig.build,
         outDir,

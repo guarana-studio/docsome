@@ -8,12 +8,24 @@
 }
 
 .shiki {
-  @apply py-3 px-4 overflow-x-auto text-[14px];
+  @apply overflow-x-auto px-4 py-3 text-[14px];
 }
 
 .prose .highlighted-code {
   @apply w-full;
   container-type: inline-size;
+}
+
+.prose pre:not(.shiki) {
+  @apply bg-background mb-0 p-0;
+}
+
+.prose pre:not(.shiki) figure {
+  @apply border-border m-0 rounded-lg border;
+}
+
+.prose pre:not(.shiki) button {
+  @apply text-foreground;
 }
 
 .prose .highlighted-code pre,
