@@ -1,6 +1,6 @@
 {
   "name": "docsome",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Zero to docs under 15 seconds.",
   "homepage": "https://docsome.guarana.studio",
   "license": "Apache-2.0",
@@ -20,6 +20,7 @@
     "build": "tsdown",
     "docs:build": "bun dist/cli.mjs build DOCS.md --outDir docs_dist",
     "docs:dev": "bun dist/cli.mjs dev DOCS.md",
+    "docs:serve": "bunx serve docs_dist",
     "check": "svelte-check",
     "lint": "oxlint",
     "fmt": "oxfmt",

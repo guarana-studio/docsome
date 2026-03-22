@@ -47,14 +47,18 @@ const baseViteConfig = {
   },
 } satisfies UserConfig;
 
-function createDocsomePlugin(filePath: string, isDev = false): Plugin {
-  let appContext = parseContent({ content: "", sourcePath: filePath });
+function createDocsomePlugin(filePath: string, isDev = false, initialContent?: string): Plugin {
+  let appContext = initialContent
+    ? parseContent({ content: initialContent, sourcePath: filePath })
+    : parseContent({ content: "", sourcePath: filePath });
 
   return {
     name: "docsome-virtual",
     async buildStart() {
-      const content = await fetchContent(filePath);
-      appContext = parseContent({ content, sourcePath: filePath });
+      if (!initialContent) {
+        const content = await fetchContent(filePath);
+        appContext = parseContent({ content, sourcePath: filePath });
+      }
     },
     configureServer(server) {
       // Only set up watcher in dev mode
@@ -101,12 +105,14 @@ async function startServer({
   filePath,
   publicDir,
   isDev = false,
+  initialContent,
 }: {
   filePath: string;
   publicDir?: string;
   isDev?: boolean;
+  initialContent?: string;
 }) {
-  const docsomePlugin = createDocsomePlugin(filePath, isDev);
+  const docsomePlugin = createDocsomePlugin(filePath, isDev, initialContent);
   const fileDir = path.dirname(filePath);
   const server = await createServer({
     ...baseViteConfig,
@@ -133,7 +139,8 @@ async function prerender({
   outDir: string;
   publicDir?: string;
 }) {
-  const server = await startServer({ filePath, publicDir });
+  const content = await fetchContent(filePath);
+  const server = await startServer({ filePath, publicDir, initialContent: content });
   const { render } = await server.ssrLoadModule("svelte/server");
   const { default: App } = await server.ssrLoadModule("/src/app.svelte");
   const { head, body } = await render(App);
@@ -194,7 +201,7 @@ Cli()
       : path.resolve(cwd, ctx.parameters.file);
     const content = await fetchContent(filePath);
     const appContext = parseContent({ content, sourcePath: filePath });
-    const docsomePlugin = createDocsomePlugin(filePath);
+    const docsomePlugin = createDocsomePlugin(filePath, false, content);
     await build({
       ...baseViteConfig,
       base: appContext.config.base,
